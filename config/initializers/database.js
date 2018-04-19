@@ -6,6 +6,5 @@ module.exports = (callback) => {
    console.log('connecting to database... \n');
    mongoose.connect(`mongodb://${config.get('DB_ADDRESS')}/test`);
    const db = mongoose.connection;
-   console.log('connected to database!\n');
    callback();
  };

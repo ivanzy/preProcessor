@@ -14,6 +14,7 @@
     "dotenv": "*",
     "nconf": "*",
     "require-dir": "*",
+    "axios": "*",
     "mqtt": "^2.17.0"
   },
   "author": "Ivan Zyrianoff",

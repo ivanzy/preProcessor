@@ -3,20 +3,57 @@ const config = require("nconf");
 const param = require("../param");
 const processor = require("../processor/process-message");
 
-//get config topic
-var topic = config.get("DEFAULT_TOPIC");
-
-//subscribing to a topic
 module.exports.sub = callback => {
+  //connecting to broker
   const client = mqtt.connect(`mqtt://${config.get("MQTT_BROKER")}`);
 
-  //connecting to broker
-  client.on("connect", () => client.subscribe(param.mqttTopic));
-
+  //subscribing to configure topics
+  for (topic of param.mqttTopics) {
+    client.subscribe(topic);
+  }
   //message event
   client.on("message", (topic, message) => {
-    console.log(`MQTT message: ${message.toString()} time: ${new Date()}`);
+    console.log(
+      `MQTT message topic: ${topic} payload:${message.toString()} time:${new Date()}`
+    );
     //process a new message
-    processor.process(message);
+    processedMessage = processor.process(message);
+
+    //add message to mongoDB if valid
+    if (processedMessage.valid) {
+      processedMessage.message.topic = topic;
+      Message.addMessage(processedMessage.message, (err, msg) => {
+        if (err) throw err;
+      });
+    }
   });
 };
+
+module.exports.subscribeToTopic = topic => {
+  //connecting to broker
+  const client = mqtt.connect(`mqtt://${config.get("MQTT_BROKER")}`);
+
+  //subscribing to configure topics
+  client.subscribe(topic);
+
+  monitoreMessage(client);
+  
+};
+
+var monitoreMessage = (client) =>{
+  //message event
+  client.on("message", (topic, message) => {
+    console.log(
+      `MQTT message topic: ${topic} payload:${message.toString()} time:${new Date()}`
+    );
+    //process a new message
+    processedMessage = processor.process(message);
+
+    //add message to mongoDB if valid
+    if (processedMessage.valid) {
+      Message.addMessage(processedMessage.message, (err, msg) => {
+        if (err) throw err;
+      });
+    }
+  });
+}

@@ -1,5 +1,6 @@
 const params = require("../param");
 const nconf = require("nconf");
+const subscribe = require("../mqtt/subscribe");
 
 module.exports = router => {
   //get threshold params
@@ -21,20 +22,28 @@ module.exports = router => {
     })
     //updating a treshold
     .put((req, res, next) => {
-       let newTresh = params.findTresholdByField(req.params.field);
-       if(newTresh){
-          newTresh.treshold = req.body.treshold;
-       }
-       next();
+      let newTresh = params.findTresholdByField(req.params.field);
+      if (newTresh) {
+        newTresh.treshold = req.body.treshold;
+      }
+      next();
     });
 
-  router.route("/mqtt")
-  //get broker configuration
-  .get((req,res) =>{
+  router
+    .route("/mqtt")
+    //get broker configuration
+    .get((req, res) => {
       res.send({
-         address: nconf.get("MQTT_BROKER"),
-         port: nconf.get("MQTT_PORT"),
-         topic: params.mqttTopics
-      })
-  })
+        address: nconf.get("MQTT_BROKER"),
+        port: nconf.get("MQTT_PORT"),
+        topic: params.mqttTopics
+      });
+    })
+    .post((req, res, next) => {
+      if (req.body.topic != undefined) {
+        params.mqttTopics.push(req.body.topic);
+        subscribe.subscribeToTopic(req.body.topic);
+      }
+     next(); 
+    });
 };

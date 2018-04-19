@@ -1,4 +1,4 @@
-module.exports.mqttTopics = ["/1","/2"];
+module.exports.mqttTopics = ["1","2"];
 
 //array of pair value objects
 module.exports.treshold = [

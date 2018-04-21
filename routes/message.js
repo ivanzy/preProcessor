@@ -35,6 +35,7 @@ module.exports = router => {
     //post new message
     .post((req, res) => {
       let msg = req.body;
+      console.log(msg);
       Message.addMessage(msg, (err, msg) => {
         if (err) throw err;
         else res.json(msg);

@@ -1,7 +1,6 @@
-//TO DO
-var mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-var tresholdSchema = mongoose.Schema({
+const tresholdSchema = mongoose.Schema({
   field: {
     type: String,
     required: true
@@ -12,7 +11,7 @@ var tresholdSchema = mongoose.Schema({
   }
 });
 
-var Treshold = (module.exports = mongoose.model("Treshold", tresholdSchema));
+const Treshold = module.exports = mongoose.model('Treshold', tresholdSchema);
 
 //Get Tresholds
 module.exports.getTreshold = (callback, limit) => {
@@ -37,3 +36,20 @@ module.exports.addTreshold = (msg, callback) => {
   console.log("adding new treshold:" + JSON.stringify(msg));
   Treshold.create(msg, callback);
 };
+
+// Update Treshold
+module.exports.updateTreshold = (field, treshold, options, callback) => {
+	let query = {field: field};
+	let update = {
+      field: treshold.field,
+      treshold: treshold.treshold 
+   };
+   console.log("updating  treshold:" + JSON.stringify(treshold));
+	Treshold.findOneAndUpdate(query, update, options, callback);
+}
+
+// Delete Treshold
+module.exports.removeTreshold = (_id, callback) => {
+	let query = {_id: _id};
+	Treshold.remove(query, callback);
+}

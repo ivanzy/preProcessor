@@ -2,6 +2,8 @@ const params = require("../param");
 const nconf = require("nconf");
 const subscribe = require("../mqtt/subscribe");
 
+Treshold = require('../models/treshold');
+
 module.exports = router => {
   //get threshold params
   router
@@ -10,7 +12,10 @@ module.exports = router => {
     //adding new treshold
     .post((req, res) => {
       let tresh = req.body;
-      console.log(JSON.stringify(req.body));
+      Treshold.addTreshold(tresh, (err, tresh) => {
+        if (err) throw err;
+        else res.json(tresh);
+      });
       params.treshold.push(tresh);
     });
 
@@ -22,10 +27,15 @@ module.exports = router => {
     })
     //updating a treshold
     .put((req, res, next) => {
-      let newTresh = params.findTresholdByField(req.params.field);
+      let field = req.params.field;
+      let newTresh = params.findTresholdByField(field);
       if (newTresh) {
         newTresh.treshold = req.body.treshold;
+        Treshold.updateTreshold(field, newTresh,{} ,(err, newTresh) => {
+          if(err) throw err;
+        });
       }
+      res.json(newTresh);
       next();
     });
 
@@ -44,6 +54,6 @@ module.exports = router => {
         params.mqttTopics.push(req.body.topic);
         subscribe.subscribeToTopic(req.body.topic);
       }
-     next(); 
+      next();
     });
 };

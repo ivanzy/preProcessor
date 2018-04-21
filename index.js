@@ -17,7 +17,10 @@ const subscribe = require("./mqtt/subscribe");
 param.mqttTopic = "/novo";
 
 //initializing db
-async.series([callback => db(callback)], function(err) {
+async.series([
+  callback => db(callback), 
+  param.loadTreshold
+], function(err) {
   if (err) console.log("DB initialization failed" + err);
   else console.log("DB initialized SUCCESSFULLY");
 });

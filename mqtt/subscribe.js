@@ -2,6 +2,8 @@ const mqtt = require("mqtt");
 const config = require("nconf");
 const param = require("../param");
 const processor = require("../processor/process-message");
+RawMessage = require('../models/raw-message');
+
 
 module.exports.sub = callback => {
   //connecting to broker
@@ -16,6 +18,10 @@ module.exports.sub = callback => {
     console.log(
       `MQTT message topic: ${topic} payload:${message.toString()} time:${new Date()}`
     );
+
+    //stores raw message
+    RawMessage.addRawMessage(message);
+
     //process a new message
     processedMessage = processor.process(message);
 

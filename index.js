@@ -30,7 +30,7 @@ async.parallel(
   [
     //initalizing server
     callback => server(callback),
-    //subscribind to MQTT broker
+    //subscribing to MQTT broker
     callback => subscribe.sub(callback)
   ],
   function(err) {

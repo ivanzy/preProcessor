@@ -13,9 +13,6 @@ const server = require("./config/initializers/server");
 const db = require("./config/initializers/database");
 const subscribe = require("./mqtt/subscribe");
 
-//setting MQTT topic
-param.mqttTopic = "/novo";
-
 //initializing db
 async.series([callback => db(callback), param.loadTreshold], function(err) {
   if (err) console.log("DB initialization failed" + err);

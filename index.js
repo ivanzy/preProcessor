@@ -1,7 +1,7 @@
 const nconf = require("nconf");
 const async = require("async");
 const axios = require("axios");
-const param = require('./param');
+const param = require("./param");
 
 //Load Environment variables from .env file
 require("dotenv").load();
@@ -17,10 +17,7 @@ const subscribe = require("./mqtt/subscribe");
 param.mqttTopic = "/novo";
 
 //initializing db
-async.series([
-  callback => db(callback), 
-  param.loadTreshold
-], function(err) {
+async.series([callback => db(callback), param.loadTreshold], function(err) {
   if (err) console.log("DB initialization failed" + err);
   else console.log("DB initialized SUCCESSFULLY");
 });
@@ -28,10 +25,10 @@ async.series([
 //initializing modules
 async.parallel(
   [
-    //initalizing server
-    callback => server(callback),
     //subscribing to MQTT broker
-    callback => subscribe.sub(callback)
+    callback => subscribe.sub(callback),
+    //initalizing server
+    callback => server(callback)
   ],
   function(err) {
     if (err) console.log("[APP] initialization failed" + err);

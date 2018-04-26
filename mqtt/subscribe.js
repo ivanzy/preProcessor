@@ -6,9 +6,10 @@ RawMessage = require('../models/raw-message');
 
 
 module.exports.sub = callback => {
+
+  console.log(`subscribing to mqtt://${config.get("MQTT_BROKER")}`);
   //connecting to broker
   const client = mqtt.connect(`mqtt://${config.get("MQTT_BROKER")}`);
-
   //subscribing to configure topics
   for (topic of param.mqttTopics) {
     client.subscribe(topic);

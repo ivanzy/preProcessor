@@ -5,7 +5,11 @@ const nconf = require("nconf");
 module.exports.process = message => {
   //convert JSON string to JavaScript Object
   let msg = JSON.parse(message.toString());
+  return checkAnomaly(message);
 
+};
+
+var checkAnomaly = message => {
   //look for any tresholds
   for (let prop in msg) {
     for (let item of param.treshold)
@@ -20,8 +24,9 @@ module.exports.process = message => {
                 "could not connect to analytics server to send ANOMALY"
               )
             );
-            return {valid: false};
+          return { valid: false };
         }
   }
-  return {valid: true, message: msg};
+  return { valid: true, message: msg };
 };
+

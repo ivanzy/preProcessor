@@ -5,8 +5,8 @@ const nconf = require("nconf");
 module.exports.process = message => {
   //convert JSON string to JavaScript Object
   let msg = JSON.parse(message.toString());
-  return checkAnomaly(message);
-
+  let checkedMessage = checkAnomaly(message);
+ 
 };
 
 var checkAnomaly = message => {

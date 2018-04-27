@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const rawMessageSchema = mongoose.Schema({
   raw: {
      type: Object
+  },
+  create_date: {
+    type: Date,
+    default: Date.now
   }
 });
 

@@ -14,7 +14,6 @@ var messageSchema = mongoose.Schema({
   },
   topic: {
     type: String,
-    require: true
   },
   create_date: {
     type: Date,

@@ -14,26 +14,7 @@ module.exports.sub = callback => {
   for (topic of param.mqttTopics) {
     client.subscribe(topic);
   }
-  //message event
-  client.on("message", (topic, message) => {
-    console.log(
-      `MQTT message topic: ${topic} payload:${message.toString()} time:${new Date()}`
-    );
-
-    //stores raw message
-    RawMessage.addRawMessage(message);
-
-    //process a new message
-    processedMessage = processor.process(message);
-
-    //add message to mongoDB if valid
-    if (processedMessage.valid) {
-      processedMessage.message.topic = topic;
-      Message.addMessage(processedMessage.message, (err, msg) => {
-        if (err) throw err;
-      });
-    }
-  });
+  monitoreMessage(client);
 };
 
 module.exports.subscribeToTopic = topic => {

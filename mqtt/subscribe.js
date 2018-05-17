@@ -34,6 +34,11 @@ var monitoreMessage = (client) =>{
     console.log(
       `MQTT message topic: ${topic} payload:${message.toString()} time:${new Date()}`
     );
+    //add to raw data base
+    RawMessage.addRawMessage({raw: message}, (err, msg) => {
+      if (err) throw err;
+    });
+
     //process a new message
     processedMessage = processor.process(message);
 
